@@ -4,6 +4,8 @@ import { Superhero } from '../entities/superhero.entity';
 import { DeleteResult, FindOptionsRelations, Repository } from 'typeorm';
 import { CreateSuperheroDto } from '../dtos/superhero/create-superhero.dto';
 import { UpdateSuperheroDto } from '../dtos/superhero/update-superhero.dto';
+import { PaginationDto } from '../dtos/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from 'src/common/constants/pagination.constants';
 
 @Injectable()
 export class SuperheroService {
@@ -20,8 +22,28 @@ export class SuperheroService {
     return this.superheroRepository.save(hero);
   }
 
-  async findAll(): Promise<Superhero[]> {
-    return this.superheroRepository.find({ relations: this.relations });
+  async findAll(paginationDto: PaginationDto): Promise<{
+    data: Superhero[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  }> {
+    const { skip, limit, page } = paginationDto;
+
+    const [data, total] = await this.superheroRepository.findAndCount({
+      relations: this.relations,
+      skip,
+      take: limit ?? DEFAULT_PAGE_SIZE,
+    });
+
+    return {
+      data,
+      total,
+      totalPages: Math.ceil(total / (limit ?? DEFAULT_PAGE_SIZE)),
+      page,
+      limit: limit ?? DEFAULT_PAGE_SIZE,
+    };
   }
 
   async findOne(id: number): Promise<Superhero> {

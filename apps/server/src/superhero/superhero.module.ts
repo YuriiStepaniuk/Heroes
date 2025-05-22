@@ -5,9 +5,10 @@ import { Image } from './entities/image.entity';
 import { ImageService } from './services/image.service';
 import { SuperheroService } from './services/superhero.service';
 import { SuperheroController } from './controllers/superhero.controller';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Superhero, Image])],
+  imports: [TypeOrmModule.forFeature([Superhero, Image]), ConfigModule],
   providers: [ImageService, SuperheroService],
   controllers: [SuperheroController],
   exports: [],

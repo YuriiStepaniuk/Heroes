@@ -7,6 +7,7 @@ import {
   Delete,
   Get,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { SuperheroService } from '../services/superhero.service';
 import { UpdateSuperheroDto } from '../dtos/superhero/update-superhero.dto';
@@ -14,6 +15,7 @@ import { CreateSuperheroDto } from '../dtos/superhero/create-superhero.dto';
 import { LocalFileInterceptor } from 'src/common/interceptors/file.interceptor';
 import { ImageService } from '../services/image.service';
 import { Route } from 'src/enums/route.enum';
+import { PaginationDto } from '../dtos/pagination.dto';
 
 @Controller(Route.SUPERHEROS)
 export class SuperheroController {
@@ -23,8 +25,8 @@ export class SuperheroController {
   ) {}
 
   @Get()
-  async list() {
-    return this.superheroService.findAll();
+  async list(@Query() paginationDto: PaginationDto) {
+    return this.superheroService.findAll(paginationDto);
   }
 
   @Post()

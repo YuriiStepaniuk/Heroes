@@ -11,6 +11,8 @@ const configuration = () => ({
     name: process.env.DB_NAME,
     sync: process.env.NODE_ENV === Environment.DEV,
   },
+
+  maxImagesPerHero: parseInt(process.env.MAX_IMAGES_PER_HERO || '5', 10),
 });
 
 export default configuration;

@@ -11,4 +11,6 @@ export const validationSchema = Joi.object({
   DB_USER: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+
+  MAX_IMAGES_PER_HERO: Joi.number().required().default(5),
 });
