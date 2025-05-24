@@ -1,24 +1,40 @@
 import {
   CallHandler,
   ExecutionContext,
-  Injectable,
   NestInterceptor,
+  Type,
+  Injectable,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { plainToInstance } from 'class-transformer';
 import { map } from 'rxjs/operators';
-import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor {
-  constructor(private readonly classType: ClassConstructor<T>) {}
+  constructor(private readonly classType: Type<T>) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) =>
-        plainToInstance(this.classType, data, {
+      map((data) => {
+        if (Array.isArray(data)) {
+          return plainToInstance(this.classType, data, {
+            excludeExtraneousValues: true,
+          });
+        }
+
+        if (data?.data && Array.isArray(data.data)) {
+          return {
+            ...data,
+            data: plainToInstance(this.classType, data.data, {
+              excludeExtraneousValues: true,
+            }),
+          };
+        }
+
+        return plainToInstance(this.classType, data, {
           excludeExtraneousValues: true,
-        }),
-      ),
+        });
+      }),
     );
   }
 }

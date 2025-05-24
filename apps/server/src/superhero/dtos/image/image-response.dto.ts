@@ -5,5 +5,5 @@ export class ImageResponseDto {
   id: number;
 
   @Expose()
-  url: string;
+  path: string;
 }

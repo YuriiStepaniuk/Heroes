@@ -8,6 +8,8 @@ import {
   Get,
   UploadedFile,
   Query,
+  UseInterceptors,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { SuperheroService } from '../services/superhero.service';
 import { UpdateSuperheroDto } from '../dtos/superhero/update-superhero.dto';
@@ -16,6 +18,8 @@ import { LocalFileInterceptor } from 'src/common/interceptors/file.interceptor';
 import { ImageService } from '../services/image.service';
 import { Route } from 'src/enums/route.enum';
 import { PaginationDto } from '../dtos/pagination.dto';
+import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
+import { SuperheroResponseDto } from '../dtos/superhero/superhero-response.dto';
 
 @Controller(Route.SUPERHEROS)
 export class SuperheroController {
@@ -32,6 +36,12 @@ export class SuperheroController {
   @Post()
   async create(@Body() dto: CreateSuperheroDto) {
     return this.superheroService.create(dto);
+  }
+
+  @Get(':id')
+  @UseInterceptors(new TransformInterceptor(SuperheroResponseDto))
+  async getOne(@Param('id') id: number) {
+    return this.superheroService.findOne(id);
   }
 
   @Post(':id/images')
@@ -56,5 +66,14 @@ export class SuperheroController {
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.superheroService.remove(id);
+  }
+
+  @Delete(':superheroId/images/:imageId')
+  async deleteImage(
+    @Param('superheroId', ParseIntPipe) superheroId: number,
+    @Param('imageId', ParseIntPipe) imageId: number,
+  ) {
+    await this.imageService.deleteImageFromSuperhero(superheroId, imageId);
+    return { message: 'Image deleted successfully' };
   }
 }

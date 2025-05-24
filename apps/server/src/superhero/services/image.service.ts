@@ -52,6 +52,28 @@ export class ImageService {
     return this.imageRepository.save(image);
   }
 
+  async deleteImageFromSuperhero(
+    superheroId: number,
+    imageId: number,
+  ): Promise<void> {
+    const image = await this.imageRepository.findOne({
+      where: { id: imageId },
+      relations: this.relations,
+    });
+
+    if (!image) {
+      throw new NotFoundException(`Image with ID ${imageId} not found`);
+    }
+
+    if (image.superhero.id !== superheroId) {
+      throw new BadRequestException(
+        `Image ${imageId} does not belong to superhero ${superheroId}`,
+      );
+    }
+
+    await this.imageRepository.delete(imageId);
+  }
+
   async findAll(): Promise<Image[]> {
     return this.imageRepository.find({ relations: this.relations });
   }

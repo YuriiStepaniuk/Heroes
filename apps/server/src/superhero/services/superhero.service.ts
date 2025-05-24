@@ -23,26 +23,41 @@ export class SuperheroService {
   }
 
   async findAll(paginationDto: PaginationDto): Promise<{
-    data: Superhero[];
+    data: { id: number; nickname: string; imagePath?: string }[];
     total: number;
     totalPages: number;
     page: number;
     limit: number;
   }> {
-    const { skip, limit, page } = paginationDto;
+    const { page = 1, limit = DEFAULT_PAGE_SIZE } = paginationDto;
+    const skip = (page - 1) * limit;
 
-    const [data, total] = await this.superheroRepository.findAndCount({
-      relations: this.relations,
-      skip,
-      take: limit ?? DEFAULT_PAGE_SIZE,
-    });
+    // Query builder to get superheroes with one image path
+    const qb = this.superheroRepository
+      .createQueryBuilder('superhero')
+      .leftJoinAndSelect(
+        'superhero.images',
+        'image',
+        'image.id = (SELECT MIN(i.id) FROM image i WHERE i."superheroId" = "superhero"."id")',
+      )
+      .select(['superhero.id', 'superhero.nickname', 'image.path'])
+      .skip(skip)
+      .take(limit);
+
+    const [data, total] = await qb.getManyAndCount();
+
+    const result = data.map((hero) => ({
+      id: hero.id,
+      nickname: hero.nickname,
+      imagePath: hero.images?.[0]?.path,
+    }));
 
     return {
-      data,
+      data: result,
       total,
-      totalPages: Math.ceil(total / (limit ?? DEFAULT_PAGE_SIZE)),
+      totalPages: Math.ceil(total / limit),
       page,
-      limit: limit ?? DEFAULT_PAGE_SIZE,
+      limit,
     };
   }
 
