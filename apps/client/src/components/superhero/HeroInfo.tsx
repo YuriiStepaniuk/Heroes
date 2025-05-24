@@ -6,7 +6,7 @@ interface HeroInfoProps {
 
 const HeroInfo: React.FC<HeroInfoProps> = ({ hero }) => {
   return (
-    <div>
+    <>
       <h2 className="text-xl font-bold">{hero.nickname}</h2>
       <p>
         <strong>Real Name:</strong> {hero.realName}
@@ -20,7 +20,7 @@ const HeroInfo: React.FC<HeroInfoProps> = ({ hero }) => {
       <p>
         <strong>Catchphrase:</strong> {hero.catchPhrase}
       </p>
-    </div>
+    </>
   );
 };
 

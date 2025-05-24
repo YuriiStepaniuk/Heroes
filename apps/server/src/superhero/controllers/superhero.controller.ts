@@ -44,6 +44,16 @@ export class SuperheroController {
     return this.superheroService.findOne(id);
   }
 
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() dto: UpdateSuperheroDto) {
+    return this.superheroService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    return this.superheroService.remove(id);
+  }
+
   @Post(':id/images')
   @LocalFileInterceptor('photo')
   async uploadImage(
@@ -56,16 +66,6 @@ export class SuperheroController {
       message: 'Image uploaded and linked to superhero',
       image,
     };
-  }
-
-  @Patch(':id')
-  async update(@Param('id') id: number, @Body() dto: UpdateSuperheroDto) {
-    return this.superheroService.update(id, dto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: number) {
-    return this.superheroService.remove(id);
   }
 
   @Delete(':superheroId/images/:imageId')

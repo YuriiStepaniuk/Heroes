@@ -38,7 +38,7 @@ const Superhero = () => {
     <div className="p-6">
       <button
         onClick={openModal}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
+        className="px-4 py-2 bg-blue-600 text-white rounded m-4"
       >
         Add Hero
       </button>

@@ -21,7 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         Previous
       </button>
-      <span>
+      <span className="mt-2">
         Page {page} of {totalPages}
       </span>
       <button

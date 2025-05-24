@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { SuperheroResponse } from '../../types/Superhero';
 import Modal from '../UI/Modal';
+import ErrorMessage from '../UI/ErrorMessage';
+import { superheroFields } from './formFields';
 
 interface SuperheroEditFormProps {
   hero: SuperheroResponse;
@@ -47,86 +49,39 @@ const SuperheroEditForm = ({
       <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-4">
         <h3 className="text-lg font-bold mb-4">Edit Superhero</h3>
 
-        <div>
-          <input
-            {...register('nickname', { required: 'Nickname is required' })}
-            placeholder="Nickname"
-            className={`w-full border rounded px-3 py-2 ${
-              errors.nickname ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          {errors.nickname && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.nickname.message}
-            </p>
-          )}
-        </div>
+        {superheroFields.map(
+          ({ name, placeholder, validation, type, inputProps }) => {
+            const isError = !!errors[name as keyof FormData];
+            const commonClass = `w-full border rounded px-3 py-2 ${
+              isError ? 'border-red-500' : 'border-gray-300'
+            }`;
 
-        <div>
-          <input
-            {...register('realName', { required: 'Real Name is required' })}
-            placeholder="Real Name"
-            className={`w-full border rounded px-3 py-2 ${
-              errors.realName ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          {errors.realName && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.realName.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <textarea
-            {...register('originDescription', {
-              required: 'Origin description is required',
-            })}
-            placeholder="Origin Description"
-            className={`w-full border rounded px-3 py-2 ${
-              errors.originDescription ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          {errors.originDescription && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.originDescription.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <input
-            {...register('superpowers', {
-              required: 'Superpowers are required',
-            })}
-            placeholder="Superpowers (comma separated)"
-            className={`w-full border rounded px-3 py-2 ${
-              errors.superpowers ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          {errors.superpowers && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.superpowers.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <input
-            {...register('catchPhrase', {
-              required: 'Catchphrase is required',
-            })}
-            placeholder="Catchphrase"
-            className={`w-full border rounded px-3 py-2 ${
-              errors.catchPhrase ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
-          {errors.catchPhrase && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.catchPhrase.message}
-            </p>
-          )}
-        </div>
+            return (
+              <div key={name}>
+                {type === 'textarea' ? (
+                  <textarea
+                    {...register(name as keyof FormData, validation)}
+                    placeholder={placeholder}
+                    className={commonClass}
+                    {...(inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+                  />
+                ) : (
+                  <input
+                    {...register(name as keyof FormData, validation)}
+                    placeholder={placeholder}
+                    className={commonClass}
+                    {...(inputProps as React.InputHTMLAttributes<HTMLInputElement>)}
+                  />
+                )}
+                {isError && (
+                  <ErrorMessage
+                    message={errors[name as keyof FormData]?.message as string}
+                  />
+                )}
+              </div>
+            );
+          }
+        )}
 
         <div className="flex justify-end space-x-2">
           <button
@@ -142,7 +97,7 @@ const SuperheroEditForm = ({
             disabled={isSubmitting}
             className="px-4 py-2 bg-blue-600 text-white rounded"
           >
-            {isSubmitting ? 'Saving...' : 'Save'}
+            {isSubmitting ? 'Editing...' : 'Edit'}
           </button>
         </div>
       </form>

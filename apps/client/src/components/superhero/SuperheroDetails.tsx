@@ -58,31 +58,40 @@ const SuperheroDetails = () => {
   if (!hero) return <div>Hero not found</div>;
 
   return (
-    <div className="p-6">
-      <div className="flex space-x-4 mt-4">
+    <div className="p-6 max-w-5xl mx-auto">
+      {/* Action buttons aligned right */}
+      <div className="flex justify-end space-x-4 mb-6">
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           onClick={editHeroModal.openModal}
         >
           Edit
         </button>
         <button
-          className="px-4 py-2 bg-red-600 text-white rounded"
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
           onClick={deleteHeroModal.openModal}
         >
           Delete
         </button>
       </div>
 
-      <HeroInfo hero={hero} />
+      {/* Main content: info on left, upload and images stacked on right */}
+      <div className="flex flex-col md:flex-row md:space-x-8">
+        {/* Left side: Hero info and ImageUpload stacked */}
+        <div className="flex-1 space-y-6">
+          <HeroInfo hero={hero} />
+          <ImageUpload heroId={hero.id} onImageUploaded={handleImageUploaded} />
+        </div>
 
-      <HeroImages
-        images={hero.images}
-        altText={hero.nickname}
-        onDeleteImage={onDeleteImageClick}
-      />
-
-      <ImageUpload heroId={hero.id} onImageUploaded={handleImageUploaded} />
+        {/* Right side: Hero Images */}
+        <div className="flex-1 mt-8 md:mt-0">
+          <HeroImages
+            images={hero.images}
+            altText={hero.nickname}
+            onDeleteImage={onDeleteImageClick}
+          />
+        </div>
+      </div>
 
       {editHeroModal.isOpen && hero && (
         <SuperheroEditForm

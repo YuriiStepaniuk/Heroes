@@ -5,10 +5,12 @@ import Footer from './Footer';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen ">
       <Header />
 
-      <main className="flex-grow p-4 bg-gray-100">{children}</main>
+      <main className="flex-grow p-4 bg-gray-100">
+        <div className="container mx-auto px-4">{children}</div>
+      </main>
 
       <Footer />
       <ToastContainer
