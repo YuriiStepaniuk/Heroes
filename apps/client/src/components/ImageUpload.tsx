@@ -39,8 +39,11 @@ const ImageUpload: FC<ImageUploadProps> = ({ heroId, onImageUploaded }) => {
 
   return (
     <div className="my-4">
-      <label className="block mb-2 font-semibold">Upload Image</label>
+      <label htmlFor="image-upload" className="block mb-2 font-semibold">
+        Upload Image
+      </label>
       <input
+        id="image-upload"
         type="file"
         accept="image/*"
         onChange={handleFileChange}
