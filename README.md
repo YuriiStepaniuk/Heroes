@@ -44,3 +44,11 @@ Start the frontend (React):
 cd apps/client
 npm run start
 ```
+
+### Documentation
+
+For more detailed information on setup, configuration, and development, please refer to the README files located in the respective folders:
+
+apps/server/README.md — Backend server documentation
+
+apps/client/README.md — Frontend client documentation
