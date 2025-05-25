@@ -8,6 +8,7 @@ import {
 import Layout from './components/UI/Layout';
 import SuperheroDetails from './components/superhero/SuperheroDetails';
 import { AppRoutes } from './routes/AppRoutes';
+import NotFound from './components/UI/NotFound';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             path={AppRoutes.SuperheroDetails}
             element={<SuperheroDetails />}
           />
+          <Route path={AppRoutes.NotFound} element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>

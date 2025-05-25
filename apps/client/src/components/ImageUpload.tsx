@@ -1,5 +1,6 @@
 import { useState, FC, ChangeEvent } from 'react';
 import { superHeroService } from '../services/SuperheroService';
+import { toast } from 'react-toastify';
 
 interface Image {
   id: number;
@@ -13,14 +14,12 @@ interface ImageUploadProps {
 
 const ImageUpload: FC<ImageUploadProps> = ({ heroId, onImageUploaded }) => {
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
-    setError(null);
 
     const formData = new FormData();
     formData.append('photo', file);
@@ -28,8 +27,9 @@ const ImageUpload: FC<ImageUploadProps> = ({ heroId, onImageUploaded }) => {
     try {
       const response = await superHeroService.uploadImage(heroId, formData);
       onImageUploaded(response.image);
+      toast.success('Image uploaded successfully!');
     } catch (err) {
-      setError('Failed to upload image');
+      toast.error('Failed to upload image');
       console.error(err);
     } finally {
       setUploading(false);
@@ -50,7 +50,6 @@ const ImageUpload: FC<ImageUploadProps> = ({ heroId, onImageUploaded }) => {
         disabled={uploading}
       />
       {uploading && <p>Uploading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
     </div>
   );
 };

@@ -34,6 +34,15 @@ const Superhero = () => {
     return <div>Loading...</div>;
   }
 
+  if (!superheroes || superheroes.length === 0) {
+    return (
+      <div className="p-6 text-center text-gray-600">
+        Data is not accessible or no heroes found. Please make sure server is
+        running
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <button
