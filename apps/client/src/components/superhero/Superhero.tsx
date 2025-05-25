@@ -13,7 +13,7 @@ const Superhero = () => {
   const [page, setPage] = useState(1);
   const [refreshFlag, setRefreshFlag] = useState(false);
 
-  const { superheroes, totalPages, loading } = useSuperheroes(
+  const { superheroes, totalPages, loading, error } = useSuperheroes(
     page,
     refreshFlag
   );
@@ -34,11 +34,18 @@ const Superhero = () => {
     return <div>Loading...</div>;
   }
 
+  if (error) {
+    return (
+      <div className="p-6 text-center text-red-600">
+        Data is not accessible. Please make sure the server is running.
+      </div>
+    );
+  }
+
   if (!superheroes || superheroes.length === 0) {
     return (
       <div className="p-6 text-center text-gray-600">
-        Data is not accessible or no heroes found. Please make sure server is
-        running
+        No heroes yet. Feel free to add heroes with the Add button.
       </div>
     );
   }

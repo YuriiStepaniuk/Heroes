@@ -9,10 +9,12 @@ const useSuperheroes = (page: number, refreshFlag: boolean) => {
   >(null);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchSuperheroes = async () => {
       setLoading(true);
+      setError(false);
       try {
         const data = await superHeroService.fetchSuperheroes(
           page,
@@ -23,6 +25,8 @@ const useSuperheroes = (page: number, refreshFlag: boolean) => {
         setTotalPages(data.totalPages);
       } catch (error) {
         console.error('Failed to fetch superheroes:', error);
+        setError(true);
+        setSuperheroes(null);
       } finally {
         setLoading(false);
       }
@@ -30,7 +34,7 @@ const useSuperheroes = (page: number, refreshFlag: boolean) => {
     fetchSuperheroes();
   }, [page, refreshFlag]);
 
-  return { superheroes, totalPages, loading };
+  return { superheroes, totalPages, loading, error };
 };
 
 export default useSuperheroes;
